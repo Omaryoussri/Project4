@@ -109,8 +109,19 @@ public:
     // Purpose: Add a word to the Trie by creating nodes for each character
     void insert(string word) {
         // TODO: Implement this function
+        TrieNode* curr = root;
+for (char ch : word) {
+    int index = ch - 'a';
+    if (curr->children[index] == nullptr) {
+        curr->children[index] = new TrieNode();
     }
-    
+    curr = curr->children[index];
+}
+
+if (!curr->isEndOfWord) {
+    curr->isEndOfWord = true;
+    wordCount++;
+    }
     // Search for a word in the Trie
     // Input: word to search for
     // Output: boolean indicating if the word exists
@@ -161,7 +172,7 @@ public:
     // Purpose: Return how many unique complete words exist in the Trie
     int countWords() {
         // TODO: Implement this function
-        return 0;
+        return wordCount;
     }
     
     // Count how many words start with a given prefix
@@ -207,7 +218,7 @@ public:
     // Purpose: Check if the Trie has no stored words
     bool isEmpty() {
         // TODO: Implement this function
-        return true; // placeholder
+        return wordCount == 0; // placeholder
     }
     
     // Remove all words from the Trie
