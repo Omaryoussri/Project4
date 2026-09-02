@@ -3,21 +3,27 @@
 #include <string>
 using namespace std;
 
+#define ALPHABET_COUNT 26
+#define GET_CHARACHTER_INDEX(CHARACTER) (CHARACTER - 'a')
+
 // Each node in the Trie
 class TrieNode {
 public:
     // Each node has up to 26 children (for each letter)
-    TrieNode* children[26];
+    // It is not binary tree
+    // Each index of the array holds a node that has an array that has other nodes under it
+    TrieNode* children[ALPHABET_COUNT];
     
     // Marks if this node completes a word
+    // It is the condition to figure if you reached a word (from top to bottom, of course)
     bool isEndOfWord;
     
-    // Constructor
+
     TrieNode() {
         isEndOfWord = false;
         
-        for (int i = 0; i < 26; i++) {
-            children[i] = nullptr;
+        for (auto & i : children) {
+            i = nullptr;
         }
     }
 };
@@ -26,7 +32,8 @@ public:
 class Trie {
 private:
     TrieNode* root;
-    
+
+
     // Stores the total number of unique words in the Trie
     int wordCount;
     
@@ -127,9 +134,31 @@ public:
     // Purpose: Find all complete words that begin with the given prefix
     vector<string> autocomplete(string prefix) {
         vector<string> suggestions;
-        
-        // TODO: Implement this function
-        
+
+        // Gets the first node
+        TrieNode* c = root->children[
+                GET_CHARACHTER_INDEX(prefix[0])
+            ];
+
+        if (c == nullptr)
+            return suggestions;
+
+        // Checks if the rest of the prefix exists if not it returns a empty array/vector
+        for (int i = 1; i < prefix.size(); i++)
+        {
+            c = c->children[GET_CHARACHTER_INDEX(prefix[i])];
+
+            if(c == nullptr)
+                return suggestions;
+        }
+
+        // getting the rest of the branch
+
+        findAllWords(
+            c,
+            prefix,
+            suggestions);
+
         return suggestions;
     }
     
@@ -225,7 +254,7 @@ public:
     vector<string> autocomplete(string prefix, int limit) {
         vector<string> suggestions;
         
-        // TODO: Implement this function
+
         
         return suggestions;
     }
