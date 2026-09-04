@@ -124,12 +124,14 @@ for (char ch : word) {
         curr->children[index] = new TrieNode();
     }
     curr = curr->children[index];
-}
+
+    }
 
 if (!curr->isEndOfWord) {
     curr->isEndOfWord = true;
     wordCount++;
     }
+}
     // Search for a word in the Trie
     // Input: word to search for
     // Output: boolean indicating if the word exists
@@ -187,23 +189,18 @@ if (!curr->isEndOfWord) {
     // Input: prefix
     // Output: number of words
     // Purpose: Count all complete words that begin with the prefix
-    int countWordsWithPrefix(string    vector<string> getAllWords() {
-        vector<string> words;
-
-        findAllWords(root, "", words);
-
-        return words;
+    int countWordsWithPrefix(string prefix) {
+        // TODO: Implement this function
+        return 0;
     }
 
-ctor containing all words
-    // Purpose: Return every complete word stored in the Trie
+    // Get all words stored in the Trie
     vector<string> getAllWords() {
         vector<string> words;
-
-        // TODO: Implement this function
-
+        findAllWords(root, "", words);
         return words;
     }
+
 
     // Find the longest prefix of a given word that exists in the Trie
     // Input: word
