@@ -66,8 +66,8 @@ private:
             if (node->children[i] != nullptr) {
                 deleteNodes(node->children[i]);
             }
-            delete node;
         }
+        delete node;
     }
 
 
@@ -109,49 +109,47 @@ private:
 
 
 
-    bool removeHelper(
-        TrieNode* node,
-        string word,
-        int index
-    ) {
-
-        if (index == (int)word.length())
-        {
-            if (!node->isEndOfWord)
-            {
-                return false;
+    // Helper function to remove a word recursively
+    bool removeHelper(TrieNode* node, string word, int index) {
+        if (index == (int)word.length()) {
+            if (!node->isEndOfWord) {
+                return false; 
             }
-            node->isEndOfWord = false;
-        }
-        else
-        {
-            int idx = word[index] - 'a';
-            if (node->children[idx] == nullptr)
-            {
-                return false;
+            node->isEndOfWord = false; 
+            
+           
+            for (int i = 0; i < 26; i++) {
+                if (node->children[i] != nullptr) {
+                    return false;
+                }
             }
-            bool shouldDelete = removeHelper(node->childeren[idx], word, index + 1);
-            if (shouldDelete)
-            {
-                delete node->children[idx];
-                node->children[idx] = nullptr;
+            return true;
+        }
+        
+        
+        int idx = word[index] - 'a';
+        if (node->children[idx] == nullptr) {
+            return false; 
+        }
+        
+        bool shouldDelete = removeHelper(node->children[idx], word, index + 1);
+        
+        if (shouldDelete) {
+            delete node->children[idx];
+            node->children[idx] = nullptr;
+        }
+        
+        
+        if (!node->isEndOfWord) {
+            for (int i = 0; i < 26; i++) {
+                if (node->children[i] != nullptr) {
+                    return false;
+                }
             }
+            return true;
         }
-
-        if (node->isEndOfWord)
-        {
-            return false;
-        }
-
-        for (int i = 0; i < 26; i++)
-        {
-            if (node->children[i] != nullptr)
-            {
-                return false;
-            }
-        }
-
-        return true;
+        
+        return false;
     }
 
 
@@ -262,13 +260,11 @@ public:
 
     void remove(string word) 
     {
-        if (!search(word))
+        if (search(word))
         {
-            return;
+            removeHelper(root, word, 0);
+            wordCount--;
         }
-        removeHelper(root, word, 0);
-        wordCount--;
-       
     }
 
 
