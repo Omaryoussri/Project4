@@ -54,17 +54,26 @@ private:
     // Input: current node
     // Output: none
     // Purpose: Free all dynamically allocated Trie nodes
+
+
+
+
     void deleteNodes(TrieNode* node) {
-        if(node == nullptr){
+        if (node == nullptr) {
             return;
         }
-        for(int i = 0 ; i < 26 ; i++){
-            if(node->children[i] != nullptr){
+        for (int i = 0; i < 26; i++) {
+            if (node->children[i] != nullptr) {
                 deleteNodes(node->children[i]);
             }
             delete node;
         }
     }
+
+
+
+
+
 
     // Helper function to count words from a specific node
     // Input: current node
@@ -73,17 +82,17 @@ private:
     int countWordsFromNode(TrieNode* node) {
         int count = 0;
 
-       if (node->isEndOfWord) {
-           count = 1;
-       }
+        if (node->isEndOfWord) {
+            count = 1;
+        }
 
-       for (int i = 0; i < 26; i++) {
-           if (node->children[i] != nullptr) {
-               count += countWordsFromNode(node->children[i]);
-           }
-       }
+        for (int i = 0; i < 26; i++) {
+            if (node->children[i] != nullptr) {
+                count += countWordsFromNode(node->children[i]);
+            }
+        }
 
-       return count;
+        return count;
     }
 
     // Helper function to remove a word recursively
@@ -97,14 +106,55 @@ private:
     //
     // Purpose:
     // Remove the word while deleting unnecessary nodes
+
+
+
     bool removeHelper(
         TrieNode* node,
         string word,
         int index
     ) {
-        // TODO: Implement this function
-        return false;
+
+        if (index == (int)word.length())
+        {
+            if (!node->isEndOfWord)
+            {
+                return false;
+            }
+            node->isEndOfWord = false;
+        }
+        else
+        {
+            int idx = word[index] - 'a';
+            if (node->children[idx] == nullptr)
+            {
+                return false;
+            }
+            bool shouldDelete = removeHelper(node->childeren[idx], word, index + 1);
+            if (shouldDelete)
+            {
+                delete node->children[idx];
+                node->children[idx] = nullptr;
+            }
+        }
+
+        if (node->isEndOfWord)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < 26; i++)
+        {
+            if (node->children[i] != nullptr)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
+
+
 
 public:
     // Constructor
@@ -129,28 +179,49 @@ public:
     void insert(string word) {
         // TODO: Implement this function
         TrieNode* curr = root;
-for (char ch : word) {
-    int index = ch - 'a';
-    if (curr->children[index] == nullptr) {
-        curr->children[index] = new TrieNode();
-    }
-    curr = curr->children[index];
+        for (char ch : word) {
+            int index = ch - 'a';
+            if (curr->children[index] == nullptr) {
+                curr->children[index] = new TrieNode();
+            }
+            curr = curr->children[index];
 
-    }
+        }
 
-if (!curr->isEndOfWord) {
-    curr->isEndOfWord = true;
-    wordCount++;
+        if (!curr->isEndOfWord) {
+            curr->isEndOfWord = true;
+            wordCount++;
+        }
     }
-}
     // Search for a word in the Trie
     // Input: word to search for
     // Output: boolean indicating if the word exists
     // Purpose: Check if the complete word exists in the Trie
-    bool search(string word) {
-        // TODO: Implement this function
-        return false; // placeholder
+
+
+
+
+
+    bool search(string word)
+    {
+        TrieNode* curr = root;
+        for (char ch : word)
+        {
+            int index = ch - 'a';
+            if (curr->children[index] == nullptr)
+            {
+                return false;
+            }
+
+            curr = curr->children[index];
+        }
+    return curr->isEndOfWord;
     }
+
+
+
+
+
 
     // Check if any word starts with the given prefix
     // Input: prefix to check
@@ -183,9 +254,34 @@ if (!curr->isEndOfWord) {
     // Insert: "apple", "app"
     // Remove: "apple"
     // "app" should still exist
-    void remove(string word) {
-        // TODO: Implement this function
+
+
+
+
+
+
+    void remove(string word) 
+    {
+        if (!search(word))
+        {
+            return;
+        }
+        removeHelper(root, word, 0);
+        wordCount--;
+       
     }
+
+
+
+
+
+
+
+
+
+
+
+
 
     // Count the total number of words in the Trie
     // Input: none
