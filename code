@@ -1,0 +1,49 @@
+bool search(string word) {
+    TrieNode* current = root;
+
+    for (char c : word) {
+        int index = c - 'a';
+
+        if (current->children[index] == nullptr) {
+            return false;
+        }
+
+        current = current->children[index];
+    }
+
+    return current->isEndOfWord;
+}
+
+bool startsWith(string prefix) {
+    TrieNode* current = root;
+
+    for (char c : prefix) {
+        int index = c - 'a';
+
+        if (current->children[index] == nullptr) {
+            return false;
+        }
+
+        current = current->children[index];
+    }
+
+    return true;
+}
+
+string longestPrefixOf(string word) {
+    TrieNode* current = root;
+    string result;
+
+    for (char c : word) {
+        int index = c - 'a';
+
+        if (current->children[index] == nullptr) {
+            break;
+        }
+
+        current = current->children[index];
+        result += c;
+    }
+
+    return result;
+}
