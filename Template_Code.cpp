@@ -227,8 +227,15 @@ public:
     // Purpose: Verify if the prefix exists in the Trie
     //          (doesn't need to be a complete word)
     bool startsWith(string prefix) {
-        // TODO: Implement this function
-        return false; // placeholder
+        TrieNode* curr = root;
+        for (char ch : prefix) {
+            int index = ch - 'a';
+            if (curr->children[index] == nullptr) {
+                return false;
+            }
+            curr = curr->children[index];
+        }
+        return true;
     }
 
     // Get all words that start with the given prefix
@@ -237,9 +244,16 @@ public:
     // Purpose: Find all complete words that begin with the given prefix
     vector<string> autocomplete(string prefix) {
         vector<string> suggestions;
-
-        // TODO: Implement this function
-
+        TrieNode* curr = root;
+        for (char ch : prefix) {
+            int index = ch - 'a';
+            if (curr->children[index] == nullptr) {
+                return suggestions; 
+            }
+            curr = curr->children[index];
+        }
+        
+        findAllWords(curr, prefix, suggestions);
         return suggestions;
     }
 
@@ -326,8 +340,18 @@ public:
     // Input: "appreciate"
     // Output: "app"
     string longestPrefixOf(string word) {
-        // TODO: Implement this function
-        return "";
+        string longest = "";
+        TrieNode* curr = root;
+        
+        for (char ch : word) {
+            int index = ch - 'a';
+            if (curr->children[index] == nullptr) {
+                break; 
+            }
+            longest += ch;
+            curr = curr->children[index];
+        }
+        return longest;
     }
 
     // Check whether the Trie contains any words
@@ -363,10 +387,10 @@ public:
     // apple
     // application
     vector<string> autocomplete(string prefix, int limit) {
-        vector<string> suggestions;
-
-        // TODO: Implement this function
-
+        vector<string> suggestions = autocomplete(prefix);
+        if (suggestions.size() > (size_t)limit) {
+            suggestions.resize(limit);
+        }
         return suggestions;
     }
 };
