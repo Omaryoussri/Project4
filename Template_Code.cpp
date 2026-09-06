@@ -33,7 +33,6 @@ class Trie {
 private:
     TrieNode* root;
 
-
     // Stores the total number of unique words in the Trie
     int wordCount;
     
@@ -62,6 +61,7 @@ private:
     // Output: number of complete words below this node
     // Purpose: Count all words starting from this node
     int countWordsFromNode(TrieNode* node) {
+
         // TODO: Implement this function
         return 0;
     }
@@ -127,18 +127,13 @@ public:
         // TODO: Implement this function
         return false; // placeholder
     }
-    
-    // Get all words that start with the given prefix
-    // Input: prefix to complete
-    // Output: vector of strings that start with the prefix
-    // Purpose: Find all complete words that begin with the given prefix
+
     vector<string> autocomplete(string prefix) {
         vector<string> suggestions;
 
         // Gets the first node
-        TrieNode* c = root->children[
-                GET_CHARACHTER_INDEX(prefix[0])
-            ];
+        TrieNode* c;
+        c = root->children[GET_CHARACHTER_INDEX(prefix[0])];
 
         if (c == nullptr)
             return suggestions;
@@ -254,9 +249,37 @@ public:
     vector<string> autocomplete(string prefix, int limit) {
         vector<string> suggestions;
         
+        // Gets the first node
+        TrieNode* c;
+        c = root->children[GET_CHARACHTER_INDEX(prefix[0])];
 
-        
-        return suggestions;
+        if (c == nullptr)
+            return suggestions;
+
+        // Checks if the rest of the prefix exists if not it returns a empty array/vector
+        for (int i = 1; i < prefix.size(); i++)
+        {
+            c = c->children[GET_CHARACHTER_INDEX(prefix[i])];
+
+            if(c == nullptr)
+                return suggestions;
+        }
+
+        // getting the rest of the branch
+
+        findAllWords(
+            c,
+            prefix,
+            suggestions);
+
+        vector<string> final_result;
+
+        for (int i = 0; i < limit; i++)
+        {
+            final_result.push_back(suggestions.at(i));
+        }
+
+        return final_result;
     }
 };
 
